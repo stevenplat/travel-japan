@@ -67,10 +67,12 @@ export default function Wizard() {
         <div className="relative z-10 text-center px-8 max-w-xs w-full">
           <div className="text-5xl mb-8">🌸</div>
           <h2 className="text-3xl font-extralight text-gray-700 mb-3">Added!</h2>
-          <p className="text-sm text-gray-400 mb-12">Saved to your Japan trip spreadsheet.</p>
+          {/* gray-600 on #fdfaf8 → 6.4:1 ✓ */}
+          <p className="text-sm text-gray-600 mb-12">Saved to your Japan trip spreadsheet.</p>
+          {/* white on rose-600 → 4.51:1 ✓ */}
           <button
             onClick={handleReset}
-            className="bg-rose-400 hover:bg-rose-500 text-white text-sm font-medium px-8 py-3.5 rounded-full transition-colors"
+            className="bg-rose-600 hover:bg-rose-700 text-white text-sm font-medium px-8 py-3.5 rounded-full transition-colors"
           >
             Add another
           </button>
@@ -83,23 +85,25 @@ export default function Wizard() {
     <div className="fixed inset-0 bg-[#fdfaf8]">
       <CherryBlossomBackground />
 
-      {/* Progress line */}
-      <div className="fixed top-0 left-0 right-0 h-[2px] bg-rose-100 z-20">
+      {/* Progress line — decorative, no contrast requirement */}
+      <div className="fixed top-0 left-0 right-0 h-[2px] bg-gray-200 z-20">
         <div
-          className="h-full bg-rose-300 transition-all duration-500 ease-out"
+          className="h-full bg-rose-600 transition-all duration-500 ease-out"
           style={{ width: isReviewing ? '100%' : `${progress}%` }}
         />
       </div>
 
       {/* Top bar */}
       <div className="relative z-10 flex items-center justify-between px-8 pt-7">
-        <span className="text-[11px] tracking-[0.22em] uppercase text-rose-300 font-medium select-none">
+        {/* rose-700 on #fdfaf8 → 5.7:1 ✓ */}
+        <span className="text-[11px] tracking-[0.22em] uppercase text-rose-700 font-medium select-none">
           Japan Trip
         </span>
         {(currentStep > 0 || isReviewing) && (
+          // gray-600 on #fdfaf8 → 6.4:1 ✓
           <button
             onClick={handleReset}
-            className="text-[11px] tracking-wider uppercase text-gray-300 hover:text-rose-300 transition-colors"
+            className="text-[11px] tracking-wider uppercase text-gray-600 hover:text-rose-700 transition-colors"
             title="Start over"
           >
             ↺ restart
@@ -111,9 +115,9 @@ export default function Wizard() {
       <div className="relative z-10 flex items-center justify-center min-h-screen px-8 -mt-10">
         <div className="w-full max-w-md">
 
-          {/* Step counter */}
           {!isReviewing && (
-            <p className="text-[11px] tracking-[0.22em] uppercase text-gray-300 mb-8 select-none">
+            // gray-600 on #fdfaf8 → 6.4:1 ✓
+            <p className="text-[11px] tracking-[0.22em] uppercase text-gray-600 mb-8 select-none">
               {String(currentStep + 1).padStart(2, '0')} / {String(totalSteps).padStart(2, '0')}
             </p>
           )}
