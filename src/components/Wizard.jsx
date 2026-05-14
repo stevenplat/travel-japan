@@ -5,7 +5,7 @@ import ReviewStep from './ReviewStep.jsx'
 import CherryBlossomBackground from './CherryBlossomBackground.jsx'
 import { appendRow } from '../utils/sheetsApi.js'
 
-export default function Wizard({ token, onSignOut }) {
+export default function Wizard() {
   const [currentStep, setCurrentStep] = useState(0)
   const [answers, setAnswers] = useState({})
   const [isReviewing, setIsReviewing] = useState(false)
@@ -46,7 +46,7 @@ export default function Wizard({ token, onSignOut }) {
     setIsSubmitting(true)
     setError(null)
     try {
-      await appendRow(token, SHEET_COLUMNS.map(col => col.stepId ? (answers[col.stepId] ?? '') : (col.default ?? '')))
+      await appendRow(SHEET_COLUMNS.map(col => col.stepId ? (answers[col.stepId] ?? '') : (col.default ?? '')))
       setSubmitted(true)
     } catch (err) {
       setError(err.message)
@@ -68,20 +68,12 @@ export default function Wizard({ token, onSignOut }) {
           <div className="text-5xl mb-8">🌸</div>
           <h2 className="text-3xl font-extralight text-gray-700 mb-3">Added!</h2>
           <p className="text-sm text-gray-400 mb-12">Saved to your Japan trip spreadsheet.</p>
-          <div className="flex flex-col gap-3">
-            <button
-              onClick={handleReset}
-              className="bg-rose-400 hover:bg-rose-500 text-white text-sm font-medium px-8 py-3.5 rounded-full transition-colors"
-            >
-              Add another
-            </button>
-            <button
-              onClick={onSignOut}
-              className="text-gray-400 hover:text-gray-600 text-sm transition-colors py-2"
-            >
-              Sign out
-            </button>
-          </div>
+          <button
+            onClick={handleReset}
+            className="bg-rose-400 hover:bg-rose-500 text-white text-sm font-medium px-8 py-3.5 rounded-full transition-colors"
+          >
+            Add another
+          </button>
         </div>
       </div>
     )
@@ -100,16 +92,10 @@ export default function Wizard({ token, onSignOut }) {
       </div>
 
       {/* Top bar */}
-      <div className="relative z-10 flex items-center justify-between px-8 pt-7">
+      <div className="relative z-10 flex items-center px-8 pt-7">
         <span className="text-[11px] tracking-[0.22em] uppercase text-rose-300 font-medium select-none">
           Japan Trip
         </span>
-        <button
-          onClick={onSignOut}
-          className="text-[11px] tracking-wider uppercase text-gray-300 hover:text-gray-500 transition-colors"
-        >
-          Sign out
-        </button>
       </div>
 
       {/* Centered content */}

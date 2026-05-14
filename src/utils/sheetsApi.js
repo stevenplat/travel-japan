@@ -1,37 +1,12 @@
-import { SPREADSHEET_ID, SHEET_GID } from '../config.js'
+const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL
 
-let cachedSheetName = null
-
-async function resolveSheetName(accessToken) {
-  if (cachedSheetName) return cachedSheetName
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?fields=sheets.properties`
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  })
-  const data = await res.json()
-  const sheet = data.sheets?.find(s => s.properties?.sheetId === SHEET_GID)
-  cachedSheetName = sheet?.properties?.title ?? 'Sheet1'
-  return cachedSheetName
-}
-
-export async function appendRow(accessToken, rowData) {
-  const sheetName = await resolveSheetName(accessToken)
-  const range = `${sheetName}!A:L`
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`
-
-  const res = await fetch(url, {
+export async function appendRow(rowData) {
+  // mode: 'no-cors' because Apps Script doesn't send CORS headers for POST.
+  // The request still reaches the server and appends the row — we just can't
+  // read the response body. A thrown error means a network failure.
+  await fetch(APPS_SCRIPT_URL, {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ values: [rowData] }),
+    body: JSON.stringify({ row: rowData }),
+    mode: 'no-cors',
   })
-
-  if (!res.ok) {
-    const err = await res.json()
-    throw new Error(err.error?.message ?? 'Failed to write to spreadsheet')
-  }
-
-  return res.json()
 }
