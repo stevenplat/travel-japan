@@ -61,20 +61,6 @@ export const WIZARD_STEPS = [
     options: ['Yes', 'No'],
   },
   {
-    id: 'status',
-    title: "What's the current status?",
-    field: 'Status',
-    type: 'choice',
-    options: ['Idea', 'Researching', 'Booked', 'Done'],
-  },
-  {
-    id: 'day',
-    title: 'Which day?',
-    field: 'Day Assigned',
-    type: 'text',
-    placeholder: 'e.g. Day 3 or May 15',
-  },
-  {
     id: 'link',
     title: 'Any useful link?',
     field: 'Link / Source',
@@ -88,4 +74,20 @@ export const WIZARD_STEPS = [
     type: 'textarea',
     placeholder: 'Tips, reminders, details...',
   },
+]
+
+// Full sheet column order — stepId null means the value is never asked, use the default instead
+export const SHEET_COLUMNS = [
+  { stepId: 'activity' },
+  { stepId: 'city' },
+  { stepId: 'category' },
+  { stepId: 'priority' },
+  { stepId: 'duration' },
+  { stepId: 'cost' },
+  { stepId: 'timeOfDay' },
+  { stepId: 'booking' },
+  { stepId: null, default: 'Idea' },  // Status — always Idea
+  { stepId: null, default: '' },      // Day Assigned — always blank
+  { stepId: 'link' },
+  { stepId: 'notes' },
 ]

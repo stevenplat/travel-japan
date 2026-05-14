@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { WIZARD_STEPS } from '../config.js'
+import { WIZARD_STEPS, SHEET_COLUMNS } from '../config.js'
 import WizardStep from './WizardStep.jsx'
 import ReviewStep from './ReviewStep.jsx'
 import CherryBlossomBackground from './CherryBlossomBackground.jsx'
@@ -46,7 +46,7 @@ export default function Wizard({ token, onSignOut }) {
     setIsSubmitting(true)
     setError(null)
     try {
-      await appendRow(token, WIZARD_STEPS.map(s => answers[s.id] ?? ''))
+      await appendRow(token, SHEET_COLUMNS.map(col => col.stepId ? (answers[col.stepId] ?? '') : (col.default ?? '')))
       setSubmitted(true)
     } catch (err) {
       setError(err.message)
