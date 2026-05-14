@@ -92,10 +92,19 @@ export default function Wizard() {
       </div>
 
       {/* Top bar */}
-      <div className="relative z-10 flex items-center px-8 pt-7">
+      <div className="relative z-10 flex items-center justify-between px-8 pt-7">
         <span className="text-[11px] tracking-[0.22em] uppercase text-rose-300 font-medium select-none">
           Japan Trip
         </span>
+        {(currentStep > 0 || isReviewing) && (
+          <button
+            onClick={handleReset}
+            className="text-[11px] tracking-wider uppercase text-gray-300 hover:text-rose-300 transition-colors"
+            title="Start over"
+          >
+            ↺ restart
+          </button>
+        )}
       </div>
 
       {/* Centered content */}
