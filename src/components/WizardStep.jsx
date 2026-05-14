@@ -5,10 +5,11 @@ export default function WizardStep({ step, value, onChange, onNext, onSkip, onBa
 
   return (
     <div>
-      <h2 className="text-xl font-semibold text-gray-900 mb-1">{step.title}</h2>
-      {step.subtitle && <p className="text-gray-400 text-sm mb-1">{step.subtitle}</p>}
+      <h2 className="text-3xl font-extralight text-gray-700 leading-snug mb-10">
+        {step.title}
+      </h2>
 
-      <div className="mt-5 mb-6">
+      <div className="mb-12">
         {(step.type === 'text' || step.type === 'url') && (
           <input
             type={step.type === 'url' ? 'url' : 'text'}
@@ -17,7 +18,7 @@ export default function WizardStep({ step, value, onChange, onNext, onSkip, onBa
             onKeyDown={handleKeyDown}
             placeholder={step.placeholder ?? ''}
             autoFocus
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent transition-shadow"
+            className="w-full bg-transparent border-0 border-b-2 border-rose-100 focus:border-rose-300 text-xl text-gray-700 placeholder-gray-200 py-3 px-0 focus:outline-none focus:ring-0 transition-colors duration-200"
           />
         )}
 
@@ -28,21 +29,21 @@ export default function WizardStep({ step, value, onChange, onNext, onSkip, onBa
             placeholder={step.placeholder ?? ''}
             rows={4}
             autoFocus
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent resize-none transition-shadow"
+            className="w-full bg-transparent border-0 border-b-2 border-rose-100 focus:border-rose-300 text-lg text-gray-700 placeholder-gray-200 py-3 px-0 focus:outline-none focus:ring-0 resize-none transition-colors duration-200"
           />
         )}
 
         {step.type === 'choice' && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2.5">
             {step.options.map(option => (
               <button
                 key={option}
                 type="button"
                 onClick={() => onChange(option)}
-                className={`px-4 py-2 rounded-lg border text-sm font-medium transition-all ${
+                className={`px-5 py-2.5 rounded-full border-2 text-sm font-medium transition-all duration-150 ${
                   value === option
-                    ? 'bg-rose-500 border-rose-500 text-white shadow-sm'
-                    : 'bg-white border-gray-200 text-gray-700 hover:border-rose-300 hover:bg-rose-50'
+                    ? 'border-rose-400 bg-rose-400 text-white'
+                    : 'border-rose-100 text-gray-500 hover:border-rose-300 hover:text-gray-700 bg-white/60'
                 }`}
               >
                 {option}
@@ -52,31 +53,33 @@ export default function WizardStep({ step, value, onChange, onNext, onSkip, onBa
         )}
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-5">
         {onBack && (
           <button
             type="button"
             onClick={onBack}
-            className="px-3 py-2.5 text-gray-400 hover:text-gray-700 font-medium text-sm transition-colors"
+            className="text-sm text-gray-300 hover:text-gray-500 transition-colors"
           >
-            ← Back
+            ← back
           </button>
         )}
         <div className="flex-1" />
-        <button
-          type="button"
-          onClick={onSkip}
-          className="px-4 py-2.5 text-gray-400 hover:text-gray-600 text-sm transition-colors"
-        >
-          Skip
-        </button>
+        {!step.required && (
+          <button
+            type="button"
+            onClick={onSkip}
+            className="text-sm text-gray-300 hover:text-gray-500 transition-colors"
+          >
+            skip
+          </button>
+        )}
         <button
           type="button"
           onClick={onNext}
           disabled={step.required && !value}
-          className="bg-rose-500 hover:bg-rose-600 disabled:bg-gray-100 disabled:text-gray-300 text-white font-medium px-5 py-2.5 rounded-xl transition-colors text-sm"
+          className="bg-rose-400 hover:bg-rose-500 disabled:bg-rose-100 disabled:text-rose-300 text-white text-sm font-medium px-8 py-3 rounded-full transition-all duration-150"
         >
-          {isLast ? 'Review →' : 'Next →'}
+          {isLast ? 'Review' : 'Continue'}
         </button>
       </div>
     </div>

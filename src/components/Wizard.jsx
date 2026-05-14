@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { WIZARD_STEPS } from '../config.js'
 import WizardStep from './WizardStep.jsx'
 import ReviewStep from './ReviewStep.jsx'
+import CherryBlossomBackground from './CherryBlossomBackground.jsx'
 import { appendRow } from '../utils/sheetsApi.js'
 
 export default function Wizard({ token, onSignOut }) {
@@ -17,11 +18,8 @@ export default function Wizard({ token, onSignOut }) {
   const progress = (currentStep / totalSteps) * 100
 
   const advance = () => {
-    if (currentStep < totalSteps - 1) {
-      setCurrentStep(n => n + 1)
-    } else {
-      setIsReviewing(true)
-    }
+    if (currentStep < totalSteps - 1) setCurrentStep(n => n + 1)
+    else setIsReviewing(true)
   }
 
   const handleNext = () => {
@@ -35,27 +33,20 @@ export default function Wizard({ token, onSignOut }) {
   }
 
   const handleBack = () => {
-    if (isReviewing) {
-      setIsReviewing(false)
-    } else if (currentStep > 0) {
-      setCurrentStep(n => n - 1)
-    }
+    if (isReviewing) setIsReviewing(false)
+    else if (currentStep > 0) setCurrentStep(n => n - 1)
   }
 
   const handleEdit = (stepId) => {
     const idx = WIZARD_STEPS.findIndex(s => s.id === stepId)
-    if (idx !== -1) {
-      setCurrentStep(idx)
-      setIsReviewing(false)
-    }
+    if (idx !== -1) { setCurrentStep(idx); setIsReviewing(false) }
   }
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
     setError(null)
     try {
-      const row = WIZARD_STEPS.map(s => answers[s.id] ?? '')
-      await appendRow(token, row)
+      await appendRow(token, WIZARD_STEPS.map(s => answers[s.id] ?? ''))
       setSubmitted(true)
     } catch (err) {
       setError(err.message)
@@ -65,32 +56,28 @@ export default function Wizard({ token, onSignOut }) {
   }
 
   const handleReset = () => {
-    setCurrentStep(0)
-    setAnswers({})
-    setIsReviewing(false)
-    setSubmitted(false)
-    setError(null)
+    setCurrentStep(0); setAnswers({}); setIsReviewing(false)
+    setSubmitted(false); setError(null)
   }
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-xl p-10 max-w-sm w-full text-center">
-          <div className="text-6xl mb-5">✅</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Added!</h2>
-          <p className="text-gray-500 text-sm mb-8">
-            The activity has been saved to your Japan trip spreadsheet.
-          </p>
+      <div className="fixed inset-0 bg-[#fdfaf8] flex items-center justify-center">
+        <CherryBlossomBackground />
+        <div className="relative z-10 text-center px-8 max-w-xs w-full">
+          <div className="text-5xl mb-8">🌸</div>
+          <h2 className="text-3xl font-extralight text-gray-700 mb-3">Added!</h2>
+          <p className="text-sm text-gray-400 mb-12">Saved to your Japan trip spreadsheet.</p>
           <div className="flex flex-col gap-3">
             <button
               onClick={handleReset}
-              className="w-full bg-rose-500 hover:bg-rose-600 text-white font-medium py-3 px-6 rounded-xl transition-colors"
+              className="bg-rose-400 hover:bg-rose-500 text-white text-sm font-medium px-8 py-3.5 rounded-full transition-colors"
             >
               Add another
             </button>
             <button
               onClick={onSignOut}
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 font-medium py-3 px-6 rounded-xl transition-colors text-sm"
+              className="text-gray-400 hover:text-gray-600 text-sm transition-colors py-2"
             >
               Sign out
             </button>
@@ -101,40 +88,41 @@ export default function Wizard({ token, onSignOut }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-orange-50 to-amber-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
+    <div className="fixed inset-0 bg-[#fdfaf8]">
+      <CherryBlossomBackground />
 
-        {/* Header */}
-        <div className="bg-rose-500 px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🗾</span>
-            <div>
-              <h1 className="text-white font-semibold text-sm">Japan Trip Planner</h1>
-              <p className="text-rose-200 text-xs">
-                {isReviewing ? 'Review entry' : `Step ${currentStep + 1} of ${totalSteps}`}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onSignOut}
-            className="text-rose-200 hover:text-white text-xs transition-colors"
-          >
-            Sign out
-          </button>
-        </div>
+      {/* Progress line */}
+      <div className="fixed top-0 left-0 right-0 h-[2px] bg-rose-100 z-20">
+        <div
+          className="h-full bg-rose-300 transition-all duration-500 ease-out"
+          style={{ width: isReviewing ? '100%' : `${progress}%` }}
+        />
+      </div>
 
-        {/* Progress bar */}
-        {!isReviewing && (
-          <div className="h-1 bg-rose-100">
-            <div
-              className="h-full bg-rose-400 transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-        )}
+      {/* Top bar */}
+      <div className="relative z-10 flex items-center justify-between px-8 pt-7">
+        <span className="text-[11px] tracking-[0.22em] uppercase text-rose-300 font-medium select-none">
+          Japan Trip
+        </span>
+        <button
+          onClick={onSignOut}
+          className="text-[11px] tracking-wider uppercase text-gray-300 hover:text-gray-500 transition-colors"
+        >
+          Sign out
+        </button>
+      </div>
 
-        {/* Step content */}
-        <div className="p-6">
+      {/* Centered content */}
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-8 -mt-10">
+        <div className="w-full max-w-md">
+
+          {/* Step counter */}
+          {!isReviewing && (
+            <p className="text-[11px] tracking-[0.22em] uppercase text-gray-300 mb-8 select-none">
+              {String(currentStep + 1).padStart(2, '0')} / {String(totalSteps).padStart(2, '0')}
+            </p>
+          )}
+
           {isReviewing ? (
             <ReviewStep
               answers={answers}
